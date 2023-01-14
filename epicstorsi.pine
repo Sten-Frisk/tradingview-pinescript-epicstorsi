@@ -1,0 +1,58 @@
+study("EPIC STORSI")
+//@version=4
+
+// ------- settings
+p = 21
+a = 21
+c = 30
+f = 70
+g = 24
+green = color.rgb(76, 175, 80)
+red = color.rgb(255, 82, 82)
+yellow = color.rgb(255, 235, 59)
+
+UP = max(0, close - close[1])
+DOWN = max(0, close[1] - close)
+
+upMA = sma(UP, p) / p
+downMA = sma(DOWN, p) / p
+
+RS = upMA / downMA
+
+//REM Computes the highest and lowest prices on p bars
+hi = highest(high, p)
+lo = lowest(low, p)
+
+Epicline = ((100 - 100 / (1 + RS))+((close - lo) / (hi - lo) * 100)) /2
+
+EpicMA = sma(Epicline, a)
+
+Combo=(EpicMA+Epicline)/2
+ComboMA=sma(Combo,c)
+
+top=f
+bot=g
+
+MAI1 = sma(close, 2)
+MAI2 = sma(MAI1, 2)
+MAI3 = sma(MAI2, 2)
+MAI4 = sma(MAI3, 2)
+MAI5 = sma(MAI4, 2)
+MAI6 = sma(MAI5, 2)
+MAI7 = sma(MAI6, 2)
+MAI8 = sma(MAI7, 2)
+MAI9 = sma(MAI8, 2)
+MAI10 = sma(MAI9, 2)
+
+mai = (MAI1 + MAI2 + MAI3 + MAI4 + MAI5 + MAI6 + MAI7 + MAI8 + MAI9 + MAI10) / 10
+
+top2 = highest(high, 10)
+
+bot2 = lowest(low, 10)
+
+ST1 = 100*(close - mai) / (top2 - bot2)
+
+// Output functions
+plot(Epicline, color=green, title="Epic STORSI")
+plot(EpicMA, title="EpicMA")
+plot(ComboMA, color=yellow, title="Trigger")

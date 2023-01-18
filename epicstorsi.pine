@@ -54,7 +54,7 @@ ST1 = 100*(close - mai) / (top2 - bot2)
 RMO = ema(ST1, 21)
 
 // Output functions
-plot(Epicline, color=green, title="Epic STORSI")
-plot(EpicMA, title="EpicMA")
-plot(ComboMA, color=yellow, title="Trigger", display = display.all)
+plot(Epicline, color=green, title="Epic STORSI", linewidth = 1)
+plot(EpicMA, title="EpicMA", linewidth = 2)
+plot(ComboMA, color=yellow, title="Trigger", linewidth = 1)
 plot(RMO, color=purple, title="ST1", linewidth = 1)

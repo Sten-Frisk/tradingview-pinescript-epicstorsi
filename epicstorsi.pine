@@ -51,10 +51,10 @@ top2 = highest(high, top)
 bot2 = lowest(low, bot)
 
 ST1 = 100*(close - mai) / (top2 - bot2)
-RMO = ema(ST1, 10)
+RMO = ema(ST1, 21)
 
 // Output functions
 plot(Epicline, color=green, title="Epic STORSI")
 plot(EpicMA, title="EpicMA")
 plot(ComboMA, color=yellow, title="Trigger", display = display.all)
-plot(RMO, color=purple, title="ST1", linewidth = 2)
+plot(RMO, color=purple, title="ST1", linewidth = 1)

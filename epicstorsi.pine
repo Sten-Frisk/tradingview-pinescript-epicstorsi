@@ -10,6 +10,7 @@ g = 24
 green = color.rgb(76, 175, 80)
 red = color.rgb(255, 82, 82)
 yellow = color.rgb(255, 235, 59)
+purple = color.rgb(230,230,250)
 
 UP = max(0, close - close[1])
 DOWN = max(0, close[1] - close)
@@ -46,13 +47,14 @@ MAI10 = sma(MAI9, 2)
 
 mai = (MAI1 + MAI2 + MAI3 + MAI4 + MAI5 + MAI6 + MAI7 + MAI8 + MAI9 + MAI10) / 10
 
-top2 = highest(high, 10)
-
-bot2 = lowest(low, 10)
+top2 = highest(high, top)
+bot2 = lowest(low, bot)
 
 ST1 = 100*(close - mai) / (top2 - bot2)
+RMO = ema(ST1, 10)
 
 // Output functions
 plot(Epicline, color=green, title="Epic STORSI")
 plot(EpicMA, title="EpicMA")
-plot(ComboMA, color=yellow, title="Trigger")
+plot(ComboMA, color=yellow, title="Trigger", display = display.all)
+plot(RMO, color=purple, title="ST1", linewidth = 2)

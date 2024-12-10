@@ -1,60 +1,52 @@
-study("EPIC STORSI")
-//@version=4
+//@version=5
+indicator('EPIC STORSI', overlay=true)
 
-// ------- settings
-p = 21
-a = 21
-c = 30
-f = 70
-g = 24
-green = color.rgb(76, 175, 80)
-red = color.rgb(255, 82, 82)
-yellow = color.rgb(255, 235, 59)
-purple = color.rgb(230,230,250)
+// ------- Trading Style Presets
+tradingStyle = input.string("Swing Trading", "Trading Style", options=["Scalping", "Swing Trading", "Position Trading"], tooltip="Choose your trading style preset")
 
-UP = max(0, close - close[1])
-DOWN = max(0, close[1] - close)
+// Initialize variables based on the selected style
+var p = 21
+var a = 21
+var c = 30
 
-upMA = sma(UP, p) / p
-downMA = sma(DOWN, p) / p
+if tradingStyle == "Scalping"
+    p := 14
+    a := 10
+    c := 20
+else if tradingStyle == "Position Trading"
+    p := 50
+    a := 30
+    c := 50
+
+// ------- User Customization for Colors and Thickness
+userEpiclineColor = input.color(color.green, "Epicline Default Color")
+userEpicMAColor = input.color(color.blue, "EpicMA Default Color")
+userComboMAColor = input.color(color.yellow, "ComboMA Default Color")
+
+EpiclineWidth = input.int(3, "Epicline Width", minval=1, maxval=5)
+EpicMAWidth = input.int(3, "EpicMA Width", minval=1, maxval=5)
+ComboMAWidth = input.int(2, "ComboMA Width", minval=1, maxval=5)
+
+// ------- Indicator Calculations
+UP = math.max(0, close - close[1])
+DOWN = math.max(0, close[1] - close)
+
+upMA = ta.sma(UP, p) / p
+downMA = ta.sma(DOWN, p) / p
 
 RS = upMA / downMA
 
-//REM Computes the highest and lowest prices on p bars
-hi = highest(high, p)
-lo = lowest(low, p)
+// Compute the highest and lowest prices on p bars
+hi = ta.highest(high, p)
+lo = ta.lowest(low, p)
 
-Epicline = ((100 - 100 / (1 + RS))+((close - lo) / (hi - lo) * 100)) /2
+Epicline = (100 - 100 / (1 + RS) + (close - lo) / (hi - lo) * 100) / 2
+EpicMA = ta.sma(Epicline, a)
 
-EpicMA = sma(Epicline, a)
+Combo = (EpicMA + Epicline) / 2
+ComboMA = ta.sma(Combo, c)
 
-Combo=(EpicMA+Epicline)/2
-ComboMA=sma(Combo,c)
-
-top=f
-bot=g
-
-MAI1 = sma(close, 2)
-MAI2 = sma(MAI1, 2)
-MAI3 = sma(MAI2, 2)
-MAI4 = sma(MAI3, 2)
-MAI5 = sma(MAI4, 2)
-MAI6 = sma(MAI5, 2)
-MAI7 = sma(MAI6, 2)
-MAI8 = sma(MAI7, 2)
-MAI9 = sma(MAI8, 2)
-MAI10 = sma(MAI9, 2)
-
-mai = (MAI1 + MAI2 + MAI3 + MAI4 + MAI5 + MAI6 + MAI7 + MAI8 + MAI9 + MAI10) / 10
-
-top2 = highest(high, top)
-bot2 = lowest(low, bot)
-
-ST1 = 100*(close - mai) / (top2 - bot2)
-RMO = ema(ST1, 21)
-
-// Output functions
-plot(Epicline, color=green, title="Epic STORSI", linewidth = 1)
-plot(EpicMA, title="EpicMA", linewidth = 2)
-plot(ComboMA, color=yellow, title="Trigger", linewidth = 1)
-plot(RMO, color=purple, title="ST1", linewidth = 1)
+// ------- Plotting
+plot(Epicline, color=userEpiclineColor, title='Epic STORSI', linewidth=EpiclineWidth)
+plot(EpicMA, color=userEpicMAColor, title='EpicMA', linewidth=EpicMAWidth)
+plot(ComboMA, color=userComboMAColor, title='Trigger', linewidth=ComboMAWidth)
